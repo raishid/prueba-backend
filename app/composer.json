@@ -1,0 +1,27 @@
+{
+    "name": "raishid/pruebatecnicav1",
+    "description": "Prueba Tenica para Puesto de trabajo",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "fededav",
+            "email": "67575679+raishid@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "league/route": "^5.1",
+        "laminas/laminas-diactoros": "^3.3",
+        "league/container": "^4.2",
+        "laminas/laminas-httphandlerrunner": "^2.10",
+        "illuminate/database": "^11.0"
+    },
+    "require-dev": {
+        "swew/dd": "^1.4",
+        "ramsey/uuid": "^3.9"
+    }
+}

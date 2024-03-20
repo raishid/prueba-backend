@@ -1,0 +1,63 @@
+<?php
+
+require_once "vendor/autoload.php";
+
+use App\app\database;
+
+(new database)->connect();
+
+function commands($argv)
+{
+    if($argv[1] == "migrate"){
+        $migrations = scandir("./migrations");
+        foreach($migrations as $file_migration){
+            if($file_migration != "." && $file_migration != ".."){
+                require_once "./migrations/".$file_migration;
+                $file_migration = substr($file_migration, 3);
+                $migration_class = str_replace(".php", "", $file_migration);
+                $migration = new $migration_class;
+                echo "Migrating: $file_migration\n";
+                $migration->up();
+            }
+        }
+    }
+    if($argv[1] == "rollback"){
+        $migrations = scandir("./migrations");
+        foreach($migrations as $file_migration){
+            if($file_migration != "." && $file_migration != ".."){
+                require_once "./migrations/".$file_migration;
+                $file_migration = substr($file_migration, 3);
+                $migration_class = str_replace(".php", "", $file_migration);
+                $migration = new $migration_class;
+                echo "Rolling back: $file_migration\n";
+                $migration->down();
+            }
+        }
+    }
+}
+
+function run($argv)
+{
+    if($argv[1] == "serve"){
+        $host = "localhost";
+        $port = 8001;
+        if(isset($argv[2]) && $argv[2] == "--port"){
+            $port = $argv[3];
+        }
+        echo "Server running on http://$host:$port\n";
+        passthru("php -S $host:$port");
+
+    }
+}
+
+function main($argv)
+{
+    if($argv[1] == "migrate" || $argv[1] == "rollback"){
+        commands($argv);
+    }
+    if($argv[1] == "serve"){
+        run($argv);
+    }
+}
+
+main($argv);
