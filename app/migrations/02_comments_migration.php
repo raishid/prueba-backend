@@ -10,13 +10,14 @@ class comments_migration implements migrationInterface
 {
     function up()
     {
-        if(!Manager::schema()->hasTable('comments')){
-            Manager::schema()->create('comments', function(Blueprint $table){
+        if (!Manager::schema()->hasTable('user_comments')) {
+            Manager::schema()->create('user_comments', function (Blueprint $table) {
                 $table->id();
-                $table->text('comment');
-                $table->unsignedBigInteger('user_id');
+                $table->text('coment_text');
+                $table->integer('likes')->default(0);
+                $table->unsignedBigInteger('user');
 
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                $table->foreign('user')->references('id')->on('users')->onDelete('cascade')->onUpdate('no action');
                 $table->timestamps();
             });
         }
@@ -24,8 +25,8 @@ class comments_migration implements migrationInterface
 
     function down()
     {
-        if(Manager::schema()->hasTable('comments')){
-            Manager::schema()->drop('comments');
+        if (Manager::schema()->hasTable('user_comments')) {
+            Manager::schema()->drop('user_comments');
         }
     }
 }

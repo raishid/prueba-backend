@@ -8,56 +8,64 @@ use App\traits\request_data;
 use App\validations\user_validation;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Ramsey\Uuid\Uuid;
 
 class UserController
-{   
+{
     use request_data;
 
     private function responseUser(User $user)
     {
         return [
             "id" => $user->id,
-            'username' => $user->username,
+            'fullname' => $user->fullname,
             'email' => $user->email,
-            "comments" => $user->comments()->latest()->get()->map(function($comment){
+            'openid' => $user->openid,
+            "comments" => $user->comments()->latest()->get()->map(function ($comment) {
                 return [
                     'id' => $comment->id,
-                    'comment' => $comment->comment,
-                    'created_at' => $comment->created_at,
-                    'updated_at' => $comment->updated_at
+                    'coment_text' => $comment->coment_text,
+                    'likes' => $comment->likes,
+                    'creation_date' => $comment->creation_date,
+                    'update_date' => $comment->update_date
                 ];
             }),
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at
+            'creation_date' => $user->creation_date,
+            'update_date' => $user->update_date
         ];
     }
 
     function index()
     {
         $users = User::all();
-        return new JsonResponse($users, 200);
+
+        $dataResponse = $users->map(function ($user) {
+            return $this->responseUser($user);
+        });
+
+        return new JsonResponse($dataResponse, 200);
     }
 
     function store(Request $request)
     {
         $data = $this->all($request);
-        
+
         $validation = user_validation::store($data);
 
-        if(count($validation) > 0){
+        if (count($validation) > 0) {
             return new JsonResponse($validation, 422);
         }
 
         $user = new User;
-        $user->username = $data['username'];
+        $user->fullname = $data['fullname'];
         $user->email = $data['email'];
-        $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
+        $user->openid = Uuid::uuid4();
+        $user->pass = password_hash($data['pass'], PASSWORD_DEFAULT);
         $user->save();
 
         $responseData = $this->responseUser($user);
 
         return new JsonResponse($responseData, 201);
-        
     }
 
     function update(Request $request)
@@ -66,7 +74,7 @@ class UserController
 
         $user = User::find(intval($id));
 
-        if(!$user){
+        if (!$user) {
             return new JsonResponse(['message' => 'User not found'], 404);
         }
 
@@ -74,24 +82,20 @@ class UserController
 
         $validation = user_validation::update($data);
 
-        if(count($validation) > 0){
+        if (count($validation) > 0) {
             return new JsonResponse($validation, 422);
         }
 
-        if(isset($data['username'])){
-            $user->username = $data['username'];
+        if (isset($data['fullname'])) {
+            $user->fullname = $data['fullname'];
         }
 
-        if(isset($data['email'])){
+        if (isset($data['email'])) {
             $user->email = $data['email'];
         }
 
-        if(isset($data['password'])){
-            $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
-        }
-
-        if(isset($data['password_confirmation'])){
-            $user->password = password_hash($data['password_confirmation'], PASSWORD_DEFAULT);
+        if (isset($data['pass'])) {
+            $user->pass = password_hash($data['pass'], PASSWORD_DEFAULT);
         }
 
         $user->save();
@@ -107,7 +111,7 @@ class UserController
 
         $user = User::find(intval($id));
 
-        if(!$user){
+        if (!$user) {
             return new JsonResponse(['message' => 'User not found'], 404);
         }
 
@@ -122,7 +126,7 @@ class UserController
 
         $user = User::find(intval($id));
 
-        if(!$user){
+        if (!$user) {
             return new JsonResponse(['message' => 'User not found'], 404);
         }
 

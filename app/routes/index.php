@@ -2,7 +2,6 @@
 
 use App\controllers\CommentController;
 use App\controllers\UserController;
-use App\models\User;
 
 /**
  * @var League\Route\Router $router
@@ -19,3 +18,5 @@ $router->map('GET', '/comments/{id}', [CommentController::class, 'show']);
 $router->map('POST', '/comments', [CommentController::class, 'store']);
 $router->map('PATCH', '/comments/{id}', [CommentController::class, 'update']);
 $router->map('DELETE', '/comments/{id}', [CommentController::class, 'destroy']);
+$router->map('PATCH', '/comments/{id}/like', [CommentController::class, 'addLike']);
+$router->map('PATCH', '/comments/{id}/like-remove', [CommentController::class, 'removeLike']);

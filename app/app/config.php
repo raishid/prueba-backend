@@ -4,15 +4,14 @@ namespace App\app;
 
 class config
 {
-    public $database =[
+    public $database = [
         "driver"    => "mysql",
-        "host"      => "viaduct.proxy.rlwy.net",
-        "database"  => "railway",
-        "username"  => "root",
-        "password"  => "MLPrqcqoDyluGGNZghhtLacmgyTwCEgV",
+        "host"      => "mariadb",
+        "database"  => "prueba",
+        "username"  => "prueba_web",
+        "password"  => "123456",
         "charset"   => "utf8",
-        "port"      => 10918,
+        "port"      => 3306,
         'engine'    => 'InnoDB'
     ];
-
 }

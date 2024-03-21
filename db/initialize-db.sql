@@ -2,7 +2,8 @@ DROP DATABASE prueba;
 CREATE DATABASE prueba;
 USE prueba;
 
-CREATE TABLE user (
+
+CREATE TABLE users (
     id int not null AUTO_INCREMENT,
     fullname varchar(100) not null,
     email varchar(100) not null unique,
@@ -13,7 +14,7 @@ CREATE TABLE user (
     PRIMARY KEY(id)
 );
 
-CREATE TABLE user_comment (
+CREATE TABLE user_comments (
     id int not null AUTO_INCREMENT,
     user int not null,
     coment_text text not null,
@@ -21,5 +22,5 @@ CREATE TABLE user_comment (
     creation_date datetime not null default CURRENT_TIMESTAMP(),
     update_date datetime not null default CURRENT_TIMESTAMP(),
     PRIMARY KEY(id),
-    FOREIGN KEY(user) REFERENCES user(id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY(user) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION
 );

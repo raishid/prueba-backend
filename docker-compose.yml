@@ -19,7 +19,7 @@ services:
       MYSQL_USER: prueba_web
       MYSQL_PASSWORD: 123456
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - ./db/initialize-db.sql:/docker-entrypoint-initdb.d/init.sql
     command: [ "--init-file", "/docker-entrypoint-initdb.d/init.sql" ]
@@ -34,5 +34,7 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: mariadb
+    depends_on:
+      - mariadb
     networks:
       - default

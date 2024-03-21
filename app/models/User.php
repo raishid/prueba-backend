@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\models;
 
@@ -10,17 +10,21 @@ class User extends Model
     protected $table = 'users';
 
     protected $fillable = [
-        'username',
+        'fullname',
         'email',
-        'password'
+        'pass',
+        'openid'
     ];
 
     protected $hidden = [
-        'password'
+        'pass'
     ];
+
+    const CREATED_AT = 'creation_date';
+    const UPDATED_AT = 'update_date';
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'user_id', 'id');
+        return $this->hasMany(Comment::class, 'user', 'id');
     }
 }

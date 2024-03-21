@@ -9,14 +9,15 @@ trait request_data
 {
     function all(ServerRequestInterface $request)
     {
-        if($request->getMethod() === 'POST' || $request->getMethod() === 'PATCH' || $request->getMethod() === 'PUT' || $request->getMethod() === 'DELETE'){
-            if($request->getHeader('Content-Type')[0] === 'application/json'){
-                $data = json_decode($request->getBody(), true);
-            }
-            else{
-                $data = $request->getParsedBody();
-            }
+        $body = $request->getBody();
+        $content = $request->getBody()->getContents();
+        $data = json_decode($body, true);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $data;
         }
+
+        parse_str($content, $data);
 
         return $data;
     }
